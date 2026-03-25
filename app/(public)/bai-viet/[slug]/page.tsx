@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getPostBySlug, getPosts } from '@/lib/supabase/queries'
+import { getPostBySlug } from '@/lib/supabase/queries'
 import { CommentSection } from '@/components/blog/comment-section'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'

@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getPosts, getCategories } from '@/lib/supabase/queries'
+import { getPosts } from '@/lib/supabase/queries'
 import { PostList } from '@/components/blog/post-list'
 import { Pagination } from '@/components/blog/pagination'
 import { createClient } from '@/lib/supabase/server'
