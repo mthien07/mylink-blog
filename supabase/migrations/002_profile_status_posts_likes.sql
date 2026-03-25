@@ -18,7 +18,7 @@ ALTER TABLE public.posts ALTER COLUMN title DROP NOT NULL;
 
 -- Create post_likes table
 CREATE TABLE IF NOT EXISTS public.post_likes (
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   post_id UUID REFERENCES public.posts(id) ON DELETE CASCADE NOT NULL,
   user_id UUID REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
