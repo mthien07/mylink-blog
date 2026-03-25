@@ -72,7 +72,7 @@ export default async function PostsAdminPage({ searchParams }: PostsAdminPagePro
                     <Link href={`/admin/bai-viet/${post.id}`}>
                       <Button variant="ghost" size="icon" className="h-8 w-8"><Edit className="h-3.5 w-3.5" /></Button>
                     </Link>
-                    <DeletePostButton postId={post.id} postTitle={post.title} />
+                    <DeletePostButton postId={post.id} postTitle={post.title || ''} />
                   </div>
                 </td>
               </tr>

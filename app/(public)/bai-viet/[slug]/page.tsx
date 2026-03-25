@@ -19,10 +19,10 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   const post = await getPostBySlug(slug)
   if (!post) return { title: 'Bài viết không tồn tại' }
   return {
-    title: post.title,
-    description: post.excerpt || post.title,
+    title: post.title || 'Bài viết',
+    description: post.excerpt || post.title || '',
     openGraph: {
-      title: post.title,
+      title: post.title || 'Bài viết',
       description: post.excerpt || undefined,
       images: post.thumbnail_url ? [{ url: post.thumbnail_url }] : [],
       type: 'article',
@@ -109,7 +109,7 @@ export default async function PostDetailPage({ params }: PostPageProps) {
       {/* Thumbnail */}
       {post.thumbnail_url && (
         <div className="relative h-64 md:h-96 mb-8 rounded-xl overflow-hidden">
-          <Image src={post.thumbnail_url} alt={post.title} fill className="object-cover" priority />
+          <Image src={post.thumbnail_url} alt={post.title || ''} fill className="object-cover" priority />
         </div>
       )}
 

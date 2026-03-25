@@ -1,5 +1,6 @@
 export type UserRole = 'admin' | 'reader'
 export type PostStatus = 'draft' | 'published'
+export type PostType = 'blog' | 'status'
 export type CommentStatus = 'pending' | 'approved' | 'rejected'
 
 export interface User {
@@ -7,6 +8,11 @@ export interface User {
   email: string
   display_name: string | null
   avatar_url: string | null
+  username: string | null
+  bio: string | null
+  cover_url: string | null
+  website: string | null
+  location: string | null
   role: UserRole
   created_at: string
 }
@@ -22,7 +28,7 @@ export interface Category {
 
 export interface Post {
   id: string
-  title: string
+  title: string | null
   slug: string
   content: string
   excerpt: string | null
@@ -30,6 +36,8 @@ export interface Post {
   category_id: string | null
   author_id: string
   status: PostStatus
+  type: PostType
+  images: string[]
   view_count: number
   published_at: string | null
   created_at: string
@@ -37,6 +45,15 @@ export interface Post {
   category?: Category
   author?: User
   comment_count?: number
+  like_count?: number
+  liked_by_user?: boolean
+}
+
+export interface PostLike {
+  id: string
+  post_id: string
+  user_id: string
+  created_at: string
 }
 
 export interface Comment {

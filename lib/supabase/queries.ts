@@ -7,9 +7,10 @@ export async function getPosts(options: {
   categorySlug?: string
   search?: string
   status?: 'published' | 'draft' | 'all'
+  type?: 'blog' | 'status' | 'all'
 } = {}): Promise<{ posts: Post[]; meta: PaginationMeta }> {
   const supabase = await createClient()
-  const { page = 1, limit = 10, categorySlug, search, status = 'published' } = options
+  const { page = 1, limit = 10, categorySlug, search, status = 'published', type = 'blog' } = options
   const from = (page - 1) * limit
   const to = from + limit - 1
 
@@ -18,11 +19,12 @@ export async function getPosts(options: {
     .select(`
       *,
       category:categories(*),
-      author:users(id, display_name, avatar_url, email)
+      author:users(id, display_name, avatar_url, email, username)
     `, { count: 'exact' })
     .order('published_at', { ascending: false })
     .range(from, to)
 
+  if (type !== 'all') query = query.eq('type', type)
   if (status !== 'all') query = query.eq('status', status)
   if (categorySlug) {
     const { data: cat } = await supabase.from('categories').select('id').eq('slug', categorySlug).single()
@@ -51,7 +53,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     .select(`
       *,
       category:categories(*),
-      author:users(id, display_name, avatar_url, email)
+      author:users(id, display_name, avatar_url, email, username)
     `)
     .eq('slug', slug)
     .eq('status', 'published')
