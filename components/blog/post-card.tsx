@@ -26,7 +26,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
           <div className={`relative ${featured ? 'h-48 md:h-full' : 'h-48'} bg-muted`}>
             <Image
               src={post.thumbnail_url}
-              alt={post.title}
+              alt={post.title || ''}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
