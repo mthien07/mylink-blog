@@ -5,7 +5,6 @@ import { CategoryFilter } from '@/components/blog/category-filter'
 import { Pagination } from '@/components/blog/pagination'
 import { SearchBar } from '@/components/blog/search-bar'
 import { PostList } from '@/components/blog/post-list'
-import { Skeleton } from '@/components/ui/skeleton'
 
 interface HomePageProps {
   searchParams: Promise<{ trang?: string; 'danh-muc'?: string; q?: string }>

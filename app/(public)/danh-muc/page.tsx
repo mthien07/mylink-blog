@@ -1,5 +1,4 @@
 import { getCategories } from '@/lib/supabase/queries'
-import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
