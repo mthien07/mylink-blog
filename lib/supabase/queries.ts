@@ -84,6 +84,19 @@ export async function getComments(postId: string): Promise<Comment[]> {
   return (data || []) as Comment[]
 }
 
+export async function getPopularPosts(limit = 5): Promise<Post[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*, category:categories(*), author:users(id, display_name, avatar_url, email, username)')
+    .eq('status', 'published')
+    .eq('type', 'blog')
+    .order('view_count', { ascending: false })
+    .limit(limit)
+  if (error) throw error
+  return (data || []) as Post[]
+}
+
 export async function getDashboardStats() {
   const supabase = await createClient()
   const [

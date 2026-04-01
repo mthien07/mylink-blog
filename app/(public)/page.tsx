@@ -1,11 +1,10 @@
 import { Suspense } from 'react'
 import { getPosts, getCategories } from '@/lib/supabase/queries'
-import { PostCard } from '@/components/blog/post-card'
 import { CategoryFilter } from '@/components/blog/category-filter'
 import { Pagination } from '@/components/blog/pagination'
-import { SearchBar } from '@/components/blog/search-bar'
 import { PostList } from '@/components/blog/post-list'
-import { HeroSection } from '@/components/layout/hero-section'
+import { FeaturedPosts } from '@/components/blog/featured-posts'
+import { CreatePostCTA } from '@/components/blog/create-post-cta'
 
 interface HomePageProps {
   searchParams: Promise<{ trang?: string; 'danh-muc'?: string; q?: string }>
@@ -18,38 +17,26 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const search = params.q
 
   const [{ posts, meta }, categories] = await Promise.all([
-    getPosts({ page, limit: 9, categorySlug, search }),
+    getPosts({ page, limit: 10, categorySlug, search }),
     getCategories(),
   ])
 
-  const featuredPost = page === 1 && !categorySlug && !search ? posts[0] : null
-  const remainingPosts = featuredPost ? posts.slice(1) : posts
-
   return (
-    <div className="container mx-auto px-4 py-10 max-w-6xl">
-      {/* Hero */}
-      {page === 1 && !categorySlug && !search && <HeroSection />}
+    <div className="space-y-3">
+      {/* Featured Posts horizontal carousel - first page, no filters */}
+      {page === 1 && !categorySlug && !search && <FeaturedPosts />}
 
-      {/* Search */}
-      <div className="max-w-xl mx-auto mb-8">
-        <SearchBar initialValue={search} />
-      </div>
+      {/* Create Post CTA */}
+      <CreatePostCTA />
 
       {/* Category filter */}
-      <div className="mb-8">
+      <div className="bg-card rounded-xl border px-4 py-3">
         <CategoryFilter categories={categories} currentSlug={categorySlug} />
       </div>
 
-      {/* Featured post */}
-      {featuredPost && (
-        <div className="mb-8">
-          <PostCard post={featuredPost} featured />
-        </div>
-      )}
-
-      {/* Post grid */}
+      {/* Post Feed */}
       <Suspense fallback={<PostList posts={[]} loading />}>
-        <PostList posts={remainingPosts} />
+        <PostList posts={posts} />
       </Suspense>
 
       {/* Pagination */}

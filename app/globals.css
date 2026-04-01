@@ -5,48 +5,50 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+  /* Light mode: Facebook-inspired (#F0F2F5 bg, #FFFFFF cards) */
+  --background: 216 20% 95%;
+  --foreground: 222 47% 11%;
   --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
+  --card-foreground: 222 47% 11%;
   --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --popover-foreground: 222 47% 11%;
+  --primary: 214 76% 51%;       /* #2374E1 Facebook blue */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 216 14% 93%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 216 14% 93%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 216 14% 90%;
+  --accent-foreground: 222 47% 11%;
   --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
-  --radius: 0.5rem;
+  --destructive-foreground: 0 0% 100%;
+  --border: 214 20% 88%;
+  --input: 214 20% 88%;
+  --ring: 214 76% 51%;
+  --radius: 0.75rem;
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
+  /* Dark mode: Facebook dark (#18191A bg, #242526 cards, #3A3B3C hover) */
+  --background: 210 3% 10%;     /* #18191A */
+  --foreground: 223 15% 91%;    /* #E4E6EB */
+  --card: 210 3% 15%;           /* #242526 */
+  --card-foreground: 223 15% 91%;
+  --popover: 210 3% 15%;
+  --popover-foreground: 223 15% 91%;
+  --primary: 214 76% 51%;       /* #2374E1 */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 2% 23%;      /* #3A3B3C */
+  --secondary-foreground: 223 15% 91%;
+  --muted: 210 2% 23%;
+  --muted-foreground: 218 5% 71%; /* #B0B3B8 */
+  --accent: 210 2% 23%;
+  --accent-foreground: 223 15% 91%;
   --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 224.3 76.3% 48%;
+  --destructive-foreground: 223 15% 91%;
+  --border: 210 2% 23%;
+  --input: 210 2% 23%;
+  --ring: 214 76% 51%;
 }
 
 html {
@@ -159,3 +161,10 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)); }
+
+/* Hide scrollbar for horizontal carousels */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
