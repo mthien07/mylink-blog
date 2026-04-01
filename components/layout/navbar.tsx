@@ -2,18 +2,18 @@
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
-import { Moon, Sun, Menu, Search, LogOut, User as UserIcon, LayoutDashboard, Rss } from 'lucide-react'
+import {
+  Moon, Sun, Menu, Search, LogOut, User as UserIcon,
+  LayoutDashboard, Rss, Home, BookOpen, Grid3X3,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getInitials } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -27,6 +27,8 @@ export function Navbar() {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null)
   const [profile, setProfile] = useState<AppUser | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const searchRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -65,55 +67,90 @@ export function Navbar() {
     router.refresh()
   }
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/tim-kiem?q=${encodeURIComponent(searchQuery.trim())}`)
+    } else {
+      router.push('/tim-kiem')
+    }
+  }
+
   const navLinks = [
-    { href: '/', label: 'Trang chủ' },
-    { href: '/bai-viet', label: 'Bài viết' },
-    { href: '/bang-tin', label: 'Bảng tin' },
-    { href: '/danh-muc', label: 'Danh mục' },
+    { href: '/', icon: Home, label: 'Trang chủ' },
+    { href: '/bai-viet', icon: BookOpen, label: 'Bài viết' },
+    { href: '/bang-tin', icon: Rss, label: 'Bảng tin' },
+    { href: '/danh-muc', icon: Grid3X3, label: 'Danh mục' },
   ]
 
   const displayName = profile?.display_name || authUser?.email || 'U'
   const avatarUrl = profile?.avatar_url || ''
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 flex h-16 items-center justify-between">
-        <Link href="/" className="font-bold text-xl tracking-tight hover:text-primary transition-colors">
-          mylink-blog
-        </Link>
+    <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 shadow-sm">
+      <div className="max-w-[1400px] mx-auto px-2 sm:px-4 flex h-14 items-center gap-2">
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map(link => {
-            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+        {/* Left: Logo + Search */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Link href="/" className="font-bold text-lg tracking-tight hover:text-primary transition-colors">
+            mylink
+          </Link>
+
+          {/* Compact search input - desktop */}
+          <form onSubmit={handleSearch} className="hidden md:flex relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+            <input
+              ref={searchRef}
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Tìm kiếm..."
+              className="pl-8 pr-3 h-8 text-sm bg-muted rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-primary/50 w-44 lg:w-52 transition-all"
+            />
+          </form>
+        </div>
+
+        {/* Center: Nav tabs - desktop */}
+        <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center">
+          {navLinks.map(({ href, icon: Icon, label }) => {
+            const isActive = pathname === href || (href !== '/' && pathname.startsWith(href))
             return (
               <Link
-                key={link.href}
-                href={link.href}
-                className={`relative px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                key={href}
+                href={href}
+                className={`relative flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   isActive
-                    ? 'text-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                    ? 'text-primary bg-primary/10'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
                 }`}
               >
-                {link.label}
+                <Icon className="h-4 w-4" />
+                <span className="hidden xl:inline">{label}</span>
                 {isActive && (
-                  <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-primary rounded-full" />
+                  <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-primary rounded-full" />
                 )}
               </Link>
             )
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <Link href="/tim-kiem">
-            <Button variant="ghost" size="icon" aria-label="Tìm kiếm">
+        {/* Right: Actions */}
+        <div className="flex items-center gap-1 ml-auto">
+          {/* Mobile search icon */}
+          <Link href="/tim-kiem" className="lg:hidden">
+            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full" aria-label="Tìm kiếm">
               <Search className="h-4 w-4" />
             </Button>
           </Link>
 
           {mounted && (
-            <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label="Chuyển giao diện">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-full"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              aria-label="Chuyển giao diện"
+            >
               {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
           )}
@@ -121,9 +158,9 @@ export function Navbar() {
           {authUser ? (
             <DropdownMenu>
               <DropdownMenuTrigger render={<Button variant="ghost" size="icon" className="hidden md:flex h-8 w-8 rounded-full p-0" />}>
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-8 w-8 ring-2 ring-primary/20">
                   <AvatarImage src={avatarUrl} />
-                  <AvatarFallback className="text-xs">{getInitials(displayName)}</AvatarFallback>
+                  <AvatarFallback className="text-xs bg-primary/10 text-primary">{getInitials(displayName)}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
@@ -159,35 +196,45 @@ export function Navbar() {
             </DropdownMenu>
           ) : (
             <Link href="/auth/dang-nhap">
-              <Button size="sm" className="hidden md:flex">Đăng nhập</Button>
+              <Button size="sm" className="hidden md:flex h-8 rounded-full px-4">Đăng nhập</Button>
             </Link>
           )}
 
           {/* Mobile menu */}
           <Sheet>
-            <SheetTrigger render={<Button variant="ghost" size="icon" className="md:hidden" />}>
+            <SheetTrigger render={<Button variant="ghost" size="icon" className="md:hidden h-9 w-9 rounded-full" />}>
               <Menu className="h-4 w-4" />
             </SheetTrigger>
             <SheetContent side="right">
-              <nav className="flex flex-col gap-4 mt-8">
-                {navLinks.map(link => (
-                  <Link key={link.href} href={link.href} className="text-lg font-medium hover:text-primary transition-colors">{link.label}</Link>
+              <nav className="flex flex-col gap-3 mt-8">
+                {navLinks.map(({ href, icon: Icon, label }) => (
+                  <Link key={href} href={href} className="flex items-center gap-3 text-base font-medium hover:text-primary transition-colors px-2 py-1.5 rounded-lg hover:bg-accent">
+                    <Icon className="h-5 w-5" />
+                    {label}
+                  </Link>
                 ))}
                 <hr />
                 {authUser ? (
                   <>
-                    <Link href={profile?.username ? `/nguoi-dung/${profile.username}` : '#'} className="text-lg font-medium hover:text-primary transition-colors">
+                    <Link href={profile?.username ? `/nguoi-dung/${profile.username}` : '#'} className="flex items-center gap-3 text-base font-medium hover:text-primary transition-colors px-2 py-1.5 rounded-lg hover:bg-accent">
+                      <UserIcon className="h-5 w-5" />
                       Trang cá nhân
                     </Link>
                     {profile?.role === 'admin' && (
-                      <Link href="/admin" className="text-lg font-medium hover:text-primary transition-colors">Quản trị</Link>
+                      <Link href="/admin" className="flex items-center gap-3 text-base font-medium hover:text-primary transition-colors px-2 py-1.5 rounded-lg hover:bg-accent">
+                        <LayoutDashboard className="h-5 w-5" />
+                        Quản trị
+                      </Link>
                     )}
-                    <button onClick={handleLogout} className="text-lg font-medium text-left hover:text-destructive transition-colors">
+                    <button onClick={handleLogout} className="flex items-center gap-3 text-base font-medium text-left hover:text-destructive transition-colors px-2 py-1.5 rounded-lg hover:bg-accent">
+                      <LogOut className="h-5 w-5" />
                       Đăng xuất
                     </button>
                   </>
                 ) : (
-                  <Link href="/auth/dang-nhap" className="text-lg font-medium hover:text-primary transition-colors">Đăng nhập</Link>
+                  <Link href="/auth/dang-nhap" className="flex items-center gap-3 text-base font-medium hover:text-primary transition-colors px-2 py-1.5 rounded-lg hover:bg-accent">
+                    Đăng nhập
+                  </Link>
                 )}
               </nav>
             </SheetContent>
