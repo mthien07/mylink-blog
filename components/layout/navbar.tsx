@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { Moon, Sun, Menu, Search, LogOut, User as UserIcon, LayoutDashboard, Rss } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -23,6 +23,7 @@ import type { User as AuthUser } from '@supabase/supabase-js'
 export function Navbar() {
   const { theme, setTheme } = useTheme()
   const router = useRouter()
+  const pathname = usePathname()
   const [authUser, setAuthUser] = useState<AuthUser | null>(null)
   const [profile, setProfile] = useState<AppUser | null>(null)
   const [mounted, setMounted] = useState(false)
@@ -82,12 +83,26 @@ export function Navbar() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map(link => (
-            <Link key={link.href} href={link.href} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              {link.label}
-            </Link>
-          ))}
+        <nav className="hidden md:flex items-center gap-1">
+          {navLinks.map(link => {
+            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`relative px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive
+                    ? 'text-foreground'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-primary rounded-full" />
+                )}
+              </Link>
+            )
+          })}
         </nav>
 
         <div className="flex items-center gap-2">

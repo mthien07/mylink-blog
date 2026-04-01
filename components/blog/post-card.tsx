@@ -4,22 +4,30 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Eye, MessageCircle } from 'lucide-react'
+import { Eye, MessageCircle, Clock } from 'lucide-react'
 import { formatDate, getInitials, truncate } from '@/lib/utils'
 import type { Post } from '@/lib/types'
 
 interface PostCardProps {
   post: Post
   featured?: boolean
+  index?: number
 }
 
-export function PostCard({ post, featured = false }: PostCardProps) {
+function estimateReadTime(content: string): number {
+  const words = content.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length
+  return Math.max(1, Math.ceil(words / 200))
+}
+
+export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
+  const readTime = estimateReadTime(post.content)
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className={`group bg-card rounded-lg border overflow-hidden hover:shadow-md transition-all duration-300 ${featured ? 'md:flex gap-0' : ''}`}
+      transition={{ duration: 0.35, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+      className={`group bg-card rounded-xl border overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${featured ? 'md:flex gap-0' : ''}`}
     >
       {post.thumbnail_url && (
         <Link href={`/bai-viet/${post.slug}`} className={`block overflow-hidden ${featured ? 'md:w-2/5 shrink-0' : ''}`}>
@@ -71,6 +79,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
           </div>
 
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{readTime} phút</span>
             <span className="flex items-center gap-1"><Eye className="h-3 w-3" />{post.view_count.toLocaleString()}</span>
             {post.comment_count !== undefined && (
               <span className="flex items-center gap-1"><MessageCircle className="h-3 w-3" />{post.comment_count}</span>

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { getPostBySlug } from '@/lib/supabase/queries'
 import { CommentSection } from '@/components/blog/comment-section'
+import { ShareButtons } from '@/components/blog/share-buttons'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { formatDate, getInitials } from '@/lib/utils'
@@ -79,7 +80,7 @@ export default async function PostDetailPage({ params }: PostPageProps) {
           {post.title}
         </h1>
 
-        <div className="flex flex-wrap items-center gap-4 pb-6 border-b">
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b">
           <div className="flex items-center gap-2">
             <Avatar className="h-10 w-10">
               <AvatarImage src={post.author?.avatar_url || ''} />
@@ -103,6 +104,7 @@ export default async function PostDetailPage({ params }: PostPageProps) {
               </div>
             </div>
           </div>
+          <ShareButtons title={post.title || ''} />
         </div>
       </header>
 

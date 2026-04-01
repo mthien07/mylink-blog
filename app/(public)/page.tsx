@@ -5,6 +5,7 @@ import { CategoryFilter } from '@/components/blog/category-filter'
 import { Pagination } from '@/components/blog/pagination'
 import { SearchBar } from '@/components/blog/search-bar'
 import { PostList } from '@/components/blog/post-list'
+import { HeroSection } from '@/components/layout/hero-section'
 
 interface HomePageProps {
   searchParams: Promise<{ trang?: string; 'danh-muc'?: string; q?: string }>
@@ -27,16 +28,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   return (
     <div className="container mx-auto px-4 py-10 max-w-6xl">
       {/* Hero */}
-      {page === 1 && !categorySlug && !search && (
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-            mylink<span className="text-primary">-blog</span>
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Chia sẻ kiến thức, kinh nghiệm và những điều thú vị
-          </p>
-        </div>
-      )}
+      {page === 1 && !categorySlug && !search && <HeroSection />}
 
       {/* Search */}
       <div className="max-w-xl mx-auto mb-8">

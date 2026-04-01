@@ -33,10 +33,10 @@ export default async function AdminDashboard() {
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-        <StatCard title="Tổng bài viết" value={stats.totalPosts} icon={FileText} description={`${stats.publishedPosts} đã xuất bản`} />
-        <StatCard title="Lượt xem" value={stats.totalViews} icon={Eye} description="Tổng lượt xem" />
-        <StatCard title="Bình luận" value={stats.totalComments} icon={MessageCircle} description={`${stats.pendingComments} chờ duyệt`} />
-        <StatCard title="Đã xuất bản" value={stats.publishedPosts} icon={FileText} description={`/${stats.totalPosts} bài viết`} />
+        <StatCard title="Tổng bài viết" value={stats.totalPosts} icon={FileText} description={`${stats.publishedPosts} đã xuất bản`} color="blue" />
+        <StatCard title="Lượt xem" value={stats.totalViews} icon={Eye} description="Tổng lượt xem" color="green" />
+        <StatCard title="Bình luận" value={stats.totalComments} icon={MessageCircle} description={`${stats.pendingComments} chờ duyệt`} color="orange" />
+        <StatCard title="Đã xuất bản" value={stats.publishedPosts} icon={FileText} description={`/${stats.totalPosts} bài viết`} color="purple" />
       </div>
 
       {/* Recent posts */}
