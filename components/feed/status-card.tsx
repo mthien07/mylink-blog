@@ -1,7 +1,6 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-react'
@@ -23,12 +22,7 @@ export function StatusCard({ post, currentUser, onDelete }: StatusCardProps) {
   const username = author?.username
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
-      className="bg-card border rounded-xl p-4 space-y-3"
-    >
+    <article className="animate-fade-in-up bg-card border rounded-xl p-4 space-y-3">
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-3">
@@ -86,7 +80,7 @@ export function StatusCard({ post, currentUser, onDelete }: StatusCardProps) {
         </div>
         <StatusCommentSection postId={post.id} commentCount={post.comment_count ?? 0} />
       </div>
-    </motion.article>
+    </article>
   )
 }
 

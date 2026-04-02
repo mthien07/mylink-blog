@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -20,11 +19,7 @@ export function ProfileHeader({ user, isOwner }: ProfileHeaderProps) {
   const displayName = user.display_name || user.email
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-    >
+    <div className="animate-fade-in-up">
       {/* Cover */}
       <div className="relative h-48 md:h-64 bg-muted overflow-hidden">
         {user.cover_url ? (
@@ -114,6 +109,6 @@ export function ProfileHeader({ user, isOwner }: ProfileHeaderProps) {
       {isOwner && (
         <ProfileEditDialog open={editOpen} onClose={() => setEditOpen(false)} user={user} />
       )}
-    </motion.div>
+    </div>
   )
 }

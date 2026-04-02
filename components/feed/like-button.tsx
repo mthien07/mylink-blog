@@ -1,7 +1,6 @@
 'use client'
 import { useState, useCallback, useRef } from 'react'
 import { Heart } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 import { toggleLike } from '@/lib/supabase/like-queries'
@@ -66,19 +65,12 @@ export function LikeButton({ postId, initialCount = 0, initialLiked = false }: L
       )}
       aria-label={liked ? 'Bỏ thích' : 'Thích'}
     >
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={liked ? 'liked' : 'unliked'}
-          initial={{ scale: 0.8 }}
-          animate={{ scale: 1 }}
-          exit={{ scale: 0.8 }}
-          transition={{ duration: 0.15, type: 'spring', stiffness: 400 }}
-        >
-          <Heart
-            className={cn('h-4 w-4', liked && 'fill-red-500 stroke-red-500')}
-          />
-        </motion.span>
-      </AnimatePresence>
+      <Heart
+        className={cn(
+          'h-4 w-4 transition-transform duration-150',
+          liked ? 'fill-red-500 stroke-red-500 scale-110' : 'scale-100'
+        )}
+      />
       <span>{count}</span>
     </button>
   )

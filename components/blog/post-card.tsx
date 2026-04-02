@@ -1,7 +1,6 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Eye, MessageCircle, Clock, ThumbsUp, Share2 } from 'lucide-react'
@@ -23,11 +22,9 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
   const readTime = estimateReadTime(post.content)
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
-      className="bg-card rounded-xl border overflow-hidden hover:shadow-md transition-shadow duration-200"
+    <article
+      className="animate-fade-in-up bg-card rounded-xl border overflow-hidden hover:shadow-md transition-shadow duration-200"
+      style={{ animationDelay: `${index * 0.05}s` }}
     >
       {/* Post header: avatar + author + meta */}
       <div className="flex items-center gap-3 px-4 pt-4 pb-3">
@@ -136,6 +133,6 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
           Chia sẻ
         </Link>
       </div>
-    </motion.article>
+    </article>
   )
 }
