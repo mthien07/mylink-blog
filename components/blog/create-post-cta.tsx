@@ -1,29 +1,14 @@
 'use client'
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { ImageIcon, Link2, Video } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { useUser } from '@/lib/context/user-context'
 import { getInitials } from '@/lib/utils'
-import type { User } from '@/lib/types'
 
 export function CreatePostCTA() {
-  const [profile, setProfile] = useState<User | null>(null)
+  const { user: profile } = useUser()
   const router = useRouter()
-
-  useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) return
-      const { data: profileData } = await supabase
-        .from('users')
-        .select('id, display_name, username, avatar_url, role, email, bio, cover_url, website, location, created_at')
-        .eq('id', data.user.id)
-        .maybeSingle()
-      if (profileData) setProfile(profileData as User)
-    })
-  }, [])
 
   const handleClick = () => {
     router.push(profile ? '/admin/bai-viet/tao-moi' : '/auth/dang-nhap')

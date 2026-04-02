@@ -15,54 +15,25 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useUser } from '@/lib/context/user-context'
 import { getInitials } from '@/lib/utils'
 import { toast } from 'sonner'
-import type { User as AppUser } from '@/lib/types'
-import type { User as AuthUser } from '@supabase/supabase-js'
 
 export function Navbar() {
   const { theme, setTheme } = useTheme()
   const router = useRouter()
   const pathname = usePathname()
-  const [authUser, setAuthUser] = useState<AuthUser | null>(null)
-  const [profile, setProfile] = useState<AppUser | null>(null)
+  const { user: profile } = useUser()
   const [mounted, setMounted] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    setMounted(true)
-    const supabase = createClient()
-
-    supabase.auth.getUser().then(({ data }) => {
-      setAuthUser(data.user)
-      if (data.user) fetchProfile(data.user.id)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      setAuthUser(session?.user ?? null)
-      if (session?.user) fetchProfile(session.user.id)
-      else setProfile(null)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
-
-  const fetchProfile = async (userId: string) => {
-    const supabase = createClient()
-    const { data } = await supabase
-      .from('users')
-      .select('id, display_name, username, avatar_url, role, email, bio, cover_url, website, location, created_at')
-      .eq('id', userId)
-      .maybeSingle()
-    if (data) setProfile(data as AppUser)
-  }
+  useEffect(() => { setMounted(true) }, [])
 
   const handleLogout = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
     toast.success('Đã đăng xuất')
-    setProfile(null)
     router.push('/')
     router.refresh()
   }
@@ -83,7 +54,7 @@ export function Navbar() {
     { href: '/danh-muc', icon: Grid3X3, label: 'Danh mục' },
   ]
 
-  const displayName = profile?.display_name || authUser?.email || 'U'
+  const displayName = profile?.display_name || profile?.email || 'U'
   const avatarUrl = profile?.avatar_url || ''
 
   return (
@@ -155,7 +126,7 @@ export function Navbar() {
             </Button>
           )}
 
-          {authUser ? (
+          {profile ? (
             <DropdownMenu>
               <DropdownMenuTrigger render={<Button variant="ghost" size="icon" className="hidden md:flex h-8 w-8 rounded-full p-0" />}>
                 <Avatar className="h-8 w-8 ring-2 ring-primary/20">
@@ -214,7 +185,7 @@ export function Navbar() {
                   </Link>
                 ))}
                 <hr />
-                {authUser ? (
+                {profile ? (
                   <>
                     <Link href={profile?.username ? `/nguoi-dung/${profile.username}` : '#'} className="flex items-center gap-3 text-base font-medium hover:text-primary transition-colors px-2 py-1.5 rounded-lg hover:bg-accent">
                       <UserIcon className="h-5 w-5" />

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/components/layout/theme-provider'
+import { UserProvider } from '@/lib/context/user-context'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
@@ -22,8 +23,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="vi" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          {children}
-          <Toaster />
+          <UserProvider>
+            {children}
+            <Toaster />
+          </UserProvider>
         </ThemeProvider>
       </body>
     </html>
